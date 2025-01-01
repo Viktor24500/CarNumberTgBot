@@ -1,7 +1,8 @@
 ﻿namespace CarNumberRegionsTgBot.Ukraine
 {
 	public class NewRegionsCode
-	{       //new 
+	{
+		//new 
 		public static Dictionary<string, string> UkrainianNewCarNumbersRegions = new Dictionary<string, string> //new 2004-2013
 		{
 			{ "Autonomous Republic of Crimea", "AK" },
@@ -30,38 +31,40 @@
 			{ "Khmelnytskyi Region", "BX" },
 			{ "Cherkasy Region", "CA" },
 			{ "Chernihiv Region", "CB" },
-			{ "Chernivtsi Region", "CE" }
+			{ "Chernivtsi Region", "CE" },
+			{ "National Series", "II" }
 		};
 
 		public static Dictionary<string, string> UkrainianCarNumbersRegionsAfter2013 = new Dictionary<string, string> //new 2013 - present
 			{
-				{ "Autonomous Republic of Crimea", 1 },
-				{ "Vinnytsia Region", 2 },
-				{ "Volyn Region", 3 },
-				{ "Dnipropetrovsk Region", 4 },
-				{ "Donetsk Region", 5 },
-				{ "Zhytomyr Region", 6 },
-				{ "Zakarpattia Region", 7 },
-				{ "Zaporizhzhia Region", 8 },
-				{ "Ivano-Frankivsk Region", 9 },
-				{ "Kyiv", 11 },
-				{ "Kyiv Region", 10 },
-				{ "Kirovohrad Region", 12 },
-				{ "Luhansk Region", 13 },
-				{ "Lviv Region", 14 },
-				{ "Mykolaiv Region", 15 },
-				{ "Odesa Region", 16 },
-				{ "Poltava Region", 17 },
-				{ "Rivne Region", 18 },
-				{ "Sevastopol", 27 },
-				{ "Sumy Region", 19 },
-				{ "Ternopil Region", 20 },
-				{ "Kharkiv Region", 21 },
-				{ "Kherson Region", 22 },
-				{ "Khmelnytskyi Region", 23 },
-				{ "Cherkasy Region", 24 },
-				{ "Chernihiv Region", 25 },
-				{ "Chernivtsi Region", 26 }
+				{ "Autonomous Republic of Crimea", "KK" },
+				{ "Kyiv", "KA" },
+				{ "Vinnytsia Region", "KB" },
+				{ "Volyn Region", "KC" },
+				{ "Dnipropetrovsk Region", "KE" },
+				{ "Donetsk Region", "KH" },
+				{ "Kyiv Region", "KI" },
+				{ "Zhytomyr Region", "KM" },
+				{ "Zakarpattia Region", "KO" },
+				{ "Zaporizhzhia Region", "KP" },
+				{ "Ivano-Frankivsk Region", "KT" },
+				{ "Kharkiv Region", "KX" },
+				{ "Kirovohrad Region", "HA" },
+				{ "Luhansk Region", "HB" },
+				{ "Lviv Region", "HC" },
+				{ "Mykolaiv Region", "HE" },
+				{ "Odesa Region", "HH" },
+				{ "Poltava Region", "HI" },
+				{ "Rivne Region", "HK" },
+				{ "Sumy Region", "HM" },
+				{ "Ternopil Region", "HO" },
+				{ "Kherson Region", "HT" },
+				{ "Khmelnytskyi Region", "HX" },
+				{ "Cherkasy Region", "IA" },
+				{ "Chernihiv Region", "IB" },
+				{ "Chernivtsi Region", "IE" },
+				{ "Sevastopol", "IH" },
+				{ "National Series", "II" }
 			};
 	}
 }

@@ -3,7 +3,7 @@
 	public static class OldRegionsCode
 	{
 		//old
-		public static Dictionary<string, List<string>> UkrainianOldCarNumbersRegions = new Dictionary<string, List<string>>	//old 1995-2004
+		public static Dictionary<string, int> UkrainianOldCarNumbersRegions = new Dictionary<string, int>	//old 1995-2004
 		{
 			{ "Autonomous Republic of Crimea", 1 },
 			{ "Vinnytsia Region", 2 },
