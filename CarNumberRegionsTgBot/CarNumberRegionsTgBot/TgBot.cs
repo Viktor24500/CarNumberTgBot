@@ -1,15 +1,20 @@
-﻿using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
-using Telegram.Bot.Types;
+﻿using CarNumberRegionsTgBot.Result;
+using CarNumberRegionsTgBot.Models;
+using CarNumberRegionsTgBot.CheckCarByNumber;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types;
+using CarNumberRegionsTgBot.Ukraine;
+using CarNumberRegionsTgBot.rus;
 
 namespace CarNumberRegionsTgBot
 {
     public class TgBot
     {
         private static TelegramBotClient _client;
-        private bool _isBazaGaiSession = false;
-        private BazaGai _bazaGai = new BazaGai();
+        private static bool _isBazaGaiSession = false;
+        private static BazaGai _bazaGai = new BazaGai();
         public static void getUpdate(string _token)
         {
             _client = new TelegramBotClient(_token);
@@ -39,7 +44,7 @@ namespace CarNumberRegionsTgBot
                 }
             }
         }
-        private async void processUpdate(Update update)
+        private static async void processUpdate(Update update)
         {
             switch (update.Type)
             {
@@ -56,8 +61,8 @@ namespace CarNumberRegionsTgBot
                         else
                         {
                             // Handle the BazaGai query and get the response
-                            Result<CarDetails> response = await _bazaGai(text);
-                            _client.SendTextMessageAsync(update.Message.Chat.Id, response.Data, replyMarkup: BackButtonReply());
+                            Result<CarDetails> response = await _bazaGai.GetCar(text);
+                            _client.SendTextMessageAsync(update.Message.Chat.Id, response.Data.ToString(), replyMarkup: BackButtonReply());
                         }
                     }
                     else
@@ -67,22 +72,78 @@ namespace CarNumberRegionsTgBot
                             case "/start":
                                 _client.SendTextMessageAsync(update.Message.Chat.Id, "Hello", replyMarkup: GetButtonReply());
                                 break;
-                            case "UA car numbers (new)":
-                                _client.SendTextMessageAsync(update.Message.Chat.Id, "Підгорний Віктор гр ІК-13", replyMarkup: BackButtonReply());
+                            case "UA car numbers 2013-present":
+                                string codes = "";
+                                foreach (KeyValuePair<string, string> pair in NewRegionsCode.UkrainianCarNumbersRegionsAfter2013)
+                                {
+                                    codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
+                                }
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codes}", replyMarkup: BackButtonReply());
                                 break;
-                            case "UA car numbers (old)":
-                                _client.SendTextMessageAsync(update.Message.Chat.Id, "Backend", replyMarkup: BackButtonReply());
+                            case "UA car numbers 2004-2013":
+                                codes = "";
+                                foreach (KeyValuePair<string, string> pair in NewRegionsCode.UkrainianNewCarNumbersRegionsBefore2013)
+                                {
+                                    codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
+                                }
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codes}", replyMarkup: BackButtonReply());
+                                break;
+                            case "UA car numbers 1995-2004":
+                                codes = "";
+                                foreach (KeyValuePair<string, int> pair in OldRegionsCode.UkrainianOldCarNumbersRegions)
+                                {
+                                    codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
+                                }
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codes}", replyMarkup: BackButtonReply());
                                 break;
                             case "UA car numbers (diplomatic)":
-                                _client.SendTextMessageAsync(update.Message.Chat.Id, "phone: +380542240450 \n email: xxxx@gmail.com", replyMarkup: BackButtonReply());
+                                codes = "";
+                                foreach (KeyValuePair<int, string> pair in DiplomaticCodes.DiplomaticRepresentations)
+                                {
+                                    codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
+                                }
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codes}", replyMarkup: BackButtonReply());
                                 break;
-                            case "ru car numbers (occupied territories)":
-                                _client.SendTextMessageAsync(update.Message.Chat.Id, "ru car numbers (occupied territories):", replyMarkup: BackButtonReply());
-                                _isChatGPTSession = true;
+                            case "Ukrainian occupied territories":
+                                codes = "";
+                                foreach (KeyValuePair<string, string> pair in OccupiedByrus.OccupiedUkrainianTerritories)
+                                {
+                                    codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
+                                }
+                                string codesOfOccupiedRegion = $"Codes of occupied regions \n {codes}";
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codesOfOccupiedRegion}", replyMarkup: BackButtonReply());
                                 break;
-                            case "ru car numbers (military)":
-                                _client.SendTextMessageAsync(update.Message.Chat.Id, "ru car numbers (military):", replyMarkup: BackButtonReply());
-                                _isChatGPTSession = true;
+                            case "Moldavian occupied territories":
+                                codes = "";
+                                foreach (KeyValuePair<string, string> pair in OccupiedByrus.OccupiedMoldovianTerritories)
+                                {
+                                    codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
+                                }
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codes}", replyMarkup: BackButtonReply());
+                                break;
+                            case "Chechen occupied territories":
+                                codes = "";
+                                foreach (KeyValuePair<string, int> pair in OccupiedByrus.OccupiedChechenTerritories)
+                                {
+                                    codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
+                                }
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codes}", replyMarkup: BackButtonReply());
+                                break;
+                            case "ru car numbers military according to Wiki":
+                                codes = "";
+                                foreach (KeyValuePair<int, string> pair in MilitaryCodesrus.MilitaryCodesrusAccordingToWiki)
+                                {
+                                    codes = $"{codes} \n Code: {pair.Key}. Name: {pair.Value}";
+                                }
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codes}", replyMarkup: BackButtonReply());
+                                break;
+                            case "ru car numbers military according to lazlegend":
+                                codes = "";
+                                foreach (KeyValuePair<string, string> pair in MilitaryCodesrus.MilitaryCodesrusAccordingTolazlegend)
+                                {
+                                    codes = $"{codes} \n Codes: {pair.Key}. Names: {pair.Value}";
+                                }
+                                _client.SendTextMessageAsync(update.Message.Chat.Id, $"{codes}", replyMarkup: BackButtonReply());
                                 break;
                             case "Baza Gai":
                                 _client.SendTextMessageAsync(update.Message.Chat.Id, "Baza Gai:", replyMarkup: BackButtonReply());
@@ -104,14 +165,39 @@ namespace CarNumberRegionsTgBot
             {
                     new []
                     {
-                        new KeyboardButton("UA car numbers (new)"),
-                        new KeyboardButton("UA car numbers (old)"),
-                        new KeyboardButton("UA car numbers (diplomatic)"),
+                        new KeyboardButton("UA car numbers 2013-present"),
                     },
                     new []
                     {
-                        new KeyboardButton("ru car numbers (occupied territories)"),
-                        new KeyboardButton("ru car numbers (military)"),
+                        new KeyboardButton("UA car numbers 2004-2013"),
+                    },
+                    new []
+                    {
+                        new KeyboardButton("UA car numbers 1995-2004"),
+                    },
+                    new []
+                    {
+                        new KeyboardButton("UA car numbers (diplomatic)"),
+                    },
+                   new []
+                    {
+                        new KeyboardButton("Ukrainian occupied territories"),
+                    },
+                    new []
+                    {
+                        new KeyboardButton("Moldavian occupied territories"),
+                    },
+                    new []
+                    {
+                        new KeyboardButton("Chechen occupied territories"),
+                    },
+                    new []
+                    {
+                        new KeyboardButton("ru military car numbers according to Wiki"),
+                    },
+                    new []
+                    {
+                        new KeyboardButton("ru military car numbers according to LazLegend"),
                     },
                     new []
                     {
