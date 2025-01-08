@@ -3,13 +3,13 @@
     public static class OccupiedByrus
     {
         //Ukraine
-        public static Dictionary<string, List<int>> OccupiedUkrainianTerritories = new Dictionary<string, List<int>>
+        public static Dictionary<string, string> OccupiedUkrainianTerritories = new Dictionary<string, string>
         {
-            { "Donetsk Region", new List<int> { 80, 180 } },
-            { "Luhansk Region", new List<int> { 81, 181 } },
-            { "Autonomous Republic of Crimea", new List<int> { 82, 182, 777 } },
-            { "Kherson Region", new List<int> { 84, 184 } },
-            { "Zaporizhzhia Region", new List<int> { 85, 185 } }
+            { "Donetsk Region", "80,180" },
+            { "Luhansk Region", "81,181" },
+            { "Autonomous Republic of Crimea", "82,182,777" },
+            { "Kherson Region", "84,184" },
+            { "Zaporizhzhia Region", "85,185" }
         };
 
         //Georgia
@@ -24,7 +24,7 @@
             { "A", "Bendery" },
             { "B", "Grigoriopol" },
             { "E", "Dubossary" },
-            { "H", "Tiraspol only mopeds" },
+            { "H", "Tiraspol (only mopeds) "},
             { "K", "Kamenka" },
             { "P", "Rybnitsa" },
             { "C", "Slobodzeya" },

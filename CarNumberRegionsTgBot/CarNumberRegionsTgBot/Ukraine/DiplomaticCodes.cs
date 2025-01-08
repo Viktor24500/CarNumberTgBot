@@ -4,7 +4,7 @@
 	{
 		public static Dictionary<int, string> DiplomaticRepresentations = new Dictionary<int, string>
 		{
-			{ 1, "Not used, previously belonged to the Russian Federation" },
+			{ 1, "Not used, previously belonged to the russian federation" },
 			{ 2, "United States of America" },
 			{ 3, "People's Republic of China" },
 			{ 4, "United Kingdom of Great Britain and Northern Ireland" },
