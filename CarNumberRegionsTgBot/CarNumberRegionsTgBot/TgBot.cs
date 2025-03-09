@@ -272,7 +272,7 @@ namespace CarNumberRegionsTgBot
 			}
 		}
 
-		private static IReplyMarkup GetButtonReply()
+		private static ReplyMarkup GetButtonReply()
 		{
 			return new ReplyKeyboardMarkup(new[]
 			{
@@ -322,7 +322,7 @@ namespace CarNumberRegionsTgBot
 					}
 			});
 		}
-		private static IReplyMarkup BackButtonReply()
+		private static ReplyMarkup BackButtonReply()
 		{
 			return new ReplyKeyboardMarkup(new[]
 			{
