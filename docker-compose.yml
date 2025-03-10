@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  carnumbertgbot:
+    container_name: carnumbertgbot
+    build:
+      context: ./CarNumberRegionsTgBot
+      dockerfile: CarNumberRegionsTgBot/Dockerfile
+    stdin_open: true  # Keeps stdin open to allow input
+    tty: true         # Allocates a pseudo-TTY for interactive input/output
