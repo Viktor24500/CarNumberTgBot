@@ -130,23 +130,29 @@ namespace CarNumberRegionsTgBot
 							Console.WriteLine($"User info: {update.Message.Chat.Username}");
 							Console.WriteLine($"{time} - User: {text}");
 
+							Console.Write("Admin enter your text: ");
+							string adminText = Console.ReadLine();
+							time = DateTime.Now;
+							Console.WriteLine($"{time} - Admin: {adminText}");
+							_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
+
 							// Check if it's the first message in the chat (you need a way to track this)
 							// Replace this with actual tracking logic
 
-							if (!_isFirstMessage)
-							{
-								Console.Write("Admin enter your text: ");
-								string adminText = Console.ReadLine();
-								time = DateTime.Now;
-								Console.WriteLine($"{time} - Admin: {adminText}");
-								_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
-							}
-							else
-							{
-								Console.WriteLine("Waiting for admin response...");
-								_isFirstMessage = false;
-								_client.SendTextMessageAsync(update.Message.Chat.Id, "Welcome", replyMarkup: BackButtonReply());
-							}
+							//if (!_isFirstMessage)
+							//{
+							//	Console.Write("Admin enter your text: ");
+							//	string adminText = Console.ReadLine();
+							//	time = DateTime.Now;
+							//	Console.WriteLine($"{time} - Admin: {adminText}");
+							//	_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
+							//}
+							//else
+							//{
+							//	Console.WriteLine("Waiting for admin response...");
+							//	_isFirstMessage = false;
+							//	_client.SendTextMessageAsync(update.Message.Chat.Id, "Welcome", replyMarkup: BackButtonReply());
+							//}
 							//// Handle the ChatGPT query and get the response
 							//DateTime time = new DateTime();
 							//time = DateTime.Now;
