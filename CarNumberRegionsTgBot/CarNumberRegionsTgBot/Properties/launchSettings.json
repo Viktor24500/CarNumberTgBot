@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "CarNumberRegionsTgBot": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  },
+  "filePath": "./Logs"
+}
