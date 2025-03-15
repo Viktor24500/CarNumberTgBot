@@ -1,5 +1,6 @@
 # CarNumberTgBot
 Bot with car number regions
+tg @CarNumberRegionsTgBot
 
 # start in docker
 git clone https://github.com/Viktor24500/CarNumberTgBot
