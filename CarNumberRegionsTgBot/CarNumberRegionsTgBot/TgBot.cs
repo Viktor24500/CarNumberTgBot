@@ -5,6 +5,7 @@ using CarNumberRegionsTgBot.Results;
 using CarNumberRegionsTgBot.rus;
 using CarNumberRegionsTgBot.Storage;
 using CarNumberRegionsTgBot.Ukraine;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -21,7 +22,7 @@ namespace CarNumberRegionsTgBot
 		private static bool _isContactToAdminSession = false;
 		private static bool _isFirstMessage = true;
 		private static ILogger<TgBot> _logger;
-		private static Files _files = new Files();
+		private static Files _files;
 		public static void getUpdate(string _token)
 		{
 			_client = new TelegramBotClient(_token);
@@ -140,51 +141,12 @@ namespace CarNumberRegionsTgBot
 							Console.WriteLine($"{time} - User: {text}");
 							_files.WriteToStorage($"Time: {time} User: {update.Message.Chat.Username}. Message: {text}");
 
-							//if (!_isFirstMessage)
-							//{
 							Console.Write("Admin enter your text: ");
 							string adminText = Console.ReadLine();
 							time = DateTime.Now;
 							Console.WriteLine($"{time} - Admin: {adminText}");
 							_files.WriteToStorage($"Time: {time} Admin message: {adminText}");
 							_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
-							//}
-							//////else
-							//////{
-							////	Console.WriteLine("Waiting for admin response...");
-							////	_isFirstMessage = false;
-							////	_client.SendTextMessageAsync(update.Message.Chat.Id, "Welcome", replyMarkup: BackButtonReply());
-							//////}
-							_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
-
-							// Check if it's the first message in the chat (you need a way to track this)
-							// Replace this with actual tracking logic
-
-							//if (!_isFirstMessage)
-							//{
-							//	Console.Write("Admin enter your text: ");
-							//	string adminText = Console.ReadLine();
-							//	time = DateTime.Now;
-							//	Console.WriteLine($"{time} - Admin: {adminText}");
-							//	_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
-							//}
-							//else
-							//{
-							//	Console.WriteLine("Waiting for admin response...");
-							//	_isFirstMessage = false;
-							//	_client.SendTextMessageAsync(update.Message.Chat.Id, "Welcome", replyMarkup: BackButtonReply());
-							//}
-							//// Handle the ChatGPT query and get the response
-							//DateTime time = new DateTime();
-							//time = DateTime.Now;
-							//Console.WriteLine($"User info: {update.Message.Chat.Username}");
-							//Console.WriteLine($"{time} - User: {text}");
-							//Console.Write("Admin enter your text: ");
-							//string adminText = Console.ReadLine();
-							//time = DateTime.Now;
-							//Console.WriteLine($"{time} - Admin: {adminText}");
-							//_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
-
 						}
 					}
 					else
@@ -265,6 +227,11 @@ namespace CarNumberRegionsTgBot
 					}
 					break;
 			}
+		}
+
+		public static void CreateFilesInstnce(IConfigurationRoot config)
+		{
+			_files = new Files(config);
 		}
 
 		private static ReplyMarkup GetButtonReply()

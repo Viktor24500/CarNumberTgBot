@@ -1,8 +1,15 @@
-﻿namespace CarNumberRegionsTgBot.Storage
+﻿using Microsoft.Extensions.Configuration;
+
+namespace CarNumberRegionsTgBot.Storage
 {
 	public class Files : IStorage
 	{
 		private string _folderPath = "../../../../../History";
+
+		public Files(IConfiguration configuration)
+		{
+			_folderPath = configuration["filePath"];
+		}
 		public void WriteToStorage(string input)
 		{
 			if (!Directory.Exists(_folderPath))
@@ -14,8 +21,8 @@
 			string fullPath = Path.Combine(_folderPath, fileName);
 			if (!File.Exists(fullPath))
 			{
-				File.Create(fullPath);
 				File.Create(fullPath).Close();
+				//File.Create(fullPath).Close();
 				Console.WriteLine($"{DateTime.Now}: create file on {fullPath}");
 			}
 

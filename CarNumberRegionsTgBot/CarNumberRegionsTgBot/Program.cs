@@ -1,4 +1,6 @@
-﻿namespace CarNumberRegionsTgBot
+﻿using Microsoft.Extensions.Configuration;
+
+namespace CarNumberRegionsTgBot
 {
 	public class Program
 	{
@@ -7,6 +9,12 @@
 		{
 			try
 			{
+				var configuration = new ConfigurationBuilder()
+					//.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../../Properties"))
+					.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "Properties"))
+					.AddJsonFile("launchSettings.json")
+					.Build();
+				TgBot.CreateFilesInstnce(configuration);
 				TgBot.getUpdate(_tokenBot);
 			}
 			catch (Exception ex)
