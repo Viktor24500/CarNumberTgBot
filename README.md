@@ -2,7 +2,9 @@
 Bot with car number regions
 
 # Ukraine
-Ukrainian license plate codes  from 1995 till present, diplomatic codes in Ukraine
+Ukrainian license plate codes  from 1995 till present
+
+Diplomatic codes in Ukraine
 
 # military rus and occupied
 russian military license plate codes
