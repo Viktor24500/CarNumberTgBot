@@ -5,6 +5,7 @@ services:
     build:
       context: ./CarNumberRegionsTgBot
       dockerfile: CarNumberRegionsTgBot/Dockerfile
+#    environment:
+#        - filePath: ./Logs
     stdin_open: true  # Keeps stdin open to allow input
     tty: true         # Allocates a pseudo-TTY for interactive input/output
-    filePath: ./Logs
