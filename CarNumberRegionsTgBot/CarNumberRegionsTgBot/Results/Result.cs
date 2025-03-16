@@ -1,4 +1,4 @@
-﻿namespace CarNumberRegionsTgBot.Result
+﻿namespace CarNumberRegionsTgBot.Results
 {
 	public class Result
 	{

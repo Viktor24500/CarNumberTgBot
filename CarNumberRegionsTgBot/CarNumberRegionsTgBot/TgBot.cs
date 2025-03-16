@@ -1,9 +1,11 @@
 ﻿using CarNumberRegionsTgBot.CheckCarByNumber;
 using CarNumberRegionsTgBot.Enums;
 using CarNumberRegionsTgBot.Models;
-using CarNumberRegionsTgBot.Result;
+using CarNumberRegionsTgBot.Results;
 using CarNumberRegionsTgBot.rus;
+using CarNumberRegionsTgBot.Storage;
 using CarNumberRegionsTgBot.Ukraine;
+using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -18,6 +20,8 @@ namespace CarNumberRegionsTgBot
 		private static BazaGai _bazaGai = new BazaGai();
 		private static bool _isContactToAdminSession = false;
 		private static bool _isFirstMessage = true;
+		private static ILogger<TgBot> _logger;
+		private static Files _files = new Files();
 		public static void getUpdate(string _token)
 		{
 			_client = new TelegramBotClient(_token);
@@ -63,6 +67,7 @@ namespace CarNumberRegionsTgBot
 						}
 						else
 						{
+							_files.WriteToStorage($"Time: {DateTime.Now} User: {update.Message.Chat.Username}. CarNumber: {text}");
 							string result = string.Empty;
 							string nameofErrorCode = string.Empty;
 							// Handle the BazaGai query and get the response
@@ -74,10 +79,14 @@ namespace CarNumberRegionsTgBot
 								if (response.ErrorCode == (int)ErrorCodes.NotFound)
 								{
 									errorMessage = $"Car with number {text} not found";
+									_logger.LogError(response.ErrorMessage);
+									_files.WriteToStorage($"Time: {DateTime.Now} BazaGai  ErrorCode:{response.ErrorCode}. \n BazaGai ErrorMessage: {response.ErrorMessage}");
 								}
 								if (response.ErrorCode == (int)ErrorCodes.InternalServerError)
 								{
 									errorMessage = $"Server Erorr";
+									_logger.LogError(response.ErrorMessage);
+									_files.WriteToStorage($"Time: {DateTime.Now} BazaGai  ErrorCode:{response.ErrorCode}. \n BazaGai ErrorMessage: {response.ErrorMessage}");
 								}
 								result = $"Code: {nameofErrorCode}. Message: {errorMessage}";
 							}
@@ -129,34 +138,23 @@ namespace CarNumberRegionsTgBot
 							DateTime time = DateTime.Now;
 							Console.WriteLine($"User info: {update.Message.Chat.Username}");
 							Console.WriteLine($"{time} - User: {text}");
+							_files.WriteToStorage($"Time: {time} User: {update.Message.Chat.Username}. Message: {text}");
 
-							// Check if it's the first message in the chat (you need a way to track this)
-							// Replace this with actual tracking logic
-
-							if (!_isFirstMessage)
-							{
-								Console.Write("Admin enter your text: ");
-								string adminText = Console.ReadLine();
-								time = DateTime.Now;
-								Console.WriteLine($"{time} - Admin: {adminText}");
-								_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
-							}
-							else
-							{
-								Console.WriteLine("Waiting for admin response...");
-								_isFirstMessage = false;
-								_client.SendTextMessageAsync(update.Message.Chat.Id, "Welcome", replyMarkup: BackButtonReply());
-							}
-							//// Handle the ChatGPT query and get the response
-							//DateTime time = new DateTime();
-							//time = DateTime.Now;
-							//Console.WriteLine($"User info: {update.Message.Chat.Username}");
-							//Console.WriteLine($"{time} - User: {text}");
-							//Console.Write("Admin enter your text: ");
-							//string adminText = Console.ReadLine();
-							//time = DateTime.Now;
-							//Console.WriteLine($"{time} - Admin: {adminText}");
-							//_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
+							//if (!_isFirstMessage)
+							//{
+							Console.Write("Admin enter your text: ");
+							string adminText = Console.ReadLine();
+							time = DateTime.Now;
+							Console.WriteLine($"{time} - Admin: {adminText}");
+							_files.WriteToStorage($"Time: {time} Admin message: {adminText}");
+							_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
+							//}
+							//////else
+							//////{
+							////	Console.WriteLine("Waiting for admin response...");
+							////	_isFirstMessage = false;
+							////	_client.SendTextMessageAsync(update.Message.Chat.Id, "Welcome", replyMarkup: BackButtonReply());
+							//////}
 
 						}
 					}
