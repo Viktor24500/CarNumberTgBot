@@ -1,6 +1,6 @@
 ﻿using CarNumberRegionsTgBot.Enums;
 using CarNumberRegionsTgBot.Models;
-using CarNumberRegionsTgBot.Result;
+using CarNumberRegionsTgBot.Results;
 using CarNumberRegionsTgBot.Validators;
 using System.Net.Http.Json;
 

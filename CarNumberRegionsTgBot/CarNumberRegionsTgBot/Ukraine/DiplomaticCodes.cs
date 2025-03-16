@@ -2,7 +2,7 @@
 {
 	public static class DiplomaticCodes
 	{
-		public static Dictionary<int, string> DiplomaticRepresentations = new Dictionary<int, string>
+		public static Dictionary<int, string> UkrainianDiplomaticRepresentations = new Dictionary<int, string>
 		{
 			{ 1, "Not used, previously belonged to the russian federation" },
 			{ 2, "United States of America" },

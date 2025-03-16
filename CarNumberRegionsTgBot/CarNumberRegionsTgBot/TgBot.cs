@@ -1,9 +1,11 @@
 ﻿using CarNumberRegionsTgBot.CheckCarByNumber;
 using CarNumberRegionsTgBot.Enums;
 using CarNumberRegionsTgBot.Models;
-using CarNumberRegionsTgBot.Result;
+using CarNumberRegionsTgBot.Results;
 using CarNumberRegionsTgBot.rus;
+using CarNumberRegionsTgBot.Storage;
 using CarNumberRegionsTgBot.Ukraine;
+using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -18,6 +20,8 @@ namespace CarNumberRegionsTgBot
 		private static BazaGai _bazaGai = new BazaGai();
 		private static bool _isContactToAdminSession = false;
 		private static bool _isFirstMessage = true;
+		private static ILogger<TgBot> _logger;
+		private static Files _files = new Files();
 		public static void getUpdate(string _token)
 		{
 			_client = new TelegramBotClient(_token);
@@ -63,6 +67,7 @@ namespace CarNumberRegionsTgBot
 						}
 						else
 						{
+							_files.WriteToStorage($"Time: {DateTime.Now} User: {update.Message.Chat.Username}. CarNumber: {text}");
 							string result = string.Empty;
 							string nameofErrorCode = string.Empty;
 							// Handle the BazaGai query and get the response
@@ -74,10 +79,14 @@ namespace CarNumberRegionsTgBot
 								if (response.ErrorCode == (int)ErrorCodes.NotFound)
 								{
 									errorMessage = $"Car with number {text} not found";
+									_logger.LogError(response.ErrorMessage);
+									_files.WriteToStorage($"Time: {DateTime.Now} BazaGai  ErrorCode:{response.ErrorCode}. \n BazaGai ErrorMessage: {response.ErrorMessage}");
 								}
 								if (response.ErrorCode == (int)ErrorCodes.InternalServerError)
 								{
 									errorMessage = $"Server Erorr";
+									_logger.LogError(response.ErrorMessage);
+									_files.WriteToStorage($"Time: {DateTime.Now} BazaGai  ErrorCode:{response.ErrorCode}. \n BazaGai ErrorMessage: {response.ErrorMessage}");
 								}
 								result = $"Code: {nameofErrorCode}. Message: {errorMessage}";
 							}
@@ -129,11 +138,23 @@ namespace CarNumberRegionsTgBot
 							DateTime time = DateTime.Now;
 							Console.WriteLine($"User info: {update.Message.Chat.Username}");
 							Console.WriteLine($"{time} - User: {text}");
+							_files.WriteToStorage($"Time: {time} User: {update.Message.Chat.Username}. Message: {text}");
 
+							//if (!_isFirstMessage)
+							//{
 							Console.Write("Admin enter your text: ");
 							string adminText = Console.ReadLine();
 							time = DateTime.Now;
 							Console.WriteLine($"{time} - Admin: {adminText}");
+							_files.WriteToStorage($"Time: {time} Admin message: {adminText}");
+							_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
+							//}
+							//////else
+							//////{
+							////	Console.WriteLine("Waiting for admin response...");
+							////	_isFirstMessage = false;
+							////	_client.SendTextMessageAsync(update.Message.Chat.Id, "Welcome", replyMarkup: BackButtonReply());
+							//////}
 							_client.SendTextMessageAsync(update.Message.Chat.Id, adminText, replyMarkup: BackButtonReply());
 
 							// Check if it's the first message in the chat (you need a way to track this)
@@ -174,90 +195,58 @@ namespace CarNumberRegionsTgBot
 								_client.SendTextMessageAsync(update.Message.Chat.Id, "Hello", replyMarkup: GetButtonReply());
 								break;
 							case "UA car numbers 2013-present":
-								string codes = "";
-								foreach (KeyValuePair<string, string> pair in NewRegionsCode.UkrainianCarNumbersRegionsAfter2013)
-								{
-									codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
-								}
+								string codes = CreateStringFromDictionary(NewRegionsCode.UkrainianCarNumbersRegionsAfter2013);
 								Console.WriteLine($"UA car numbers 2013-present: {DateTime.Now} - {codes}");
 								_client.SendTextMessageAsync(update.Message.Chat.Id, codes, replyMarkup: BackButtonReply());
 								break;
 							case "UA car numbers 2004-2013":
-								codes = "";
-								foreach (KeyValuePair<string, string> pair in NewRegionsCode.UkrainianNewCarNumbersRegionsBefore2013)
-								{
-									codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
-								}
+								codes = CreateStringFromDictionary(NewRegionsCode.UkrainianNewCarNumbersRegionsBefore2013);
 								Console.WriteLine($"UA car numbers 2004-2013: {DateTime.Now} - {codes}");
 								_client.SendTextMessageAsync(update.Message.Chat.Id, codes, replyMarkup: BackButtonReply());
 								break;
 							case "UA car numbers 1995-2004":
-								codes = "";
-								foreach (KeyValuePair<string, int> pair in OldRegionsCode.UkrainianOldCarNumbersRegions)
-								{
-									codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
-								}
+								codes = CreateStringFromDictionary(OldRegionsCode.UkrainianOldCarNumbersRegions);
 								Console.WriteLine($"UA car numbers 1995-2004: {DateTime.Now} - {codes}");
 								_client.SendTextMessageAsync(update.Message.Chat.Id, codes, replyMarkup: BackButtonReply());
 								break;
 							case "UA car numbers (diplomatic)":
-								codes = "";
-								foreach (KeyValuePair<int, string> pair in DiplomaticCodes.DiplomaticRepresentations)
-								{
-									codes = $"{codes} \n Code: {pair.Key}. Name: {pair.Value}";
-								}
+								codes = CreateStringFromDictionary(DiplomaticCodes.UkrainianDiplomaticRepresentations);
 								Console.WriteLine($"UA car numbers (diplomatic): {DateTime.Now} - {codes}");
 								_client.SendTextMessageAsync(update.Message.Chat.Id, codes, replyMarkup: BackButtonReply());
 								break;
 							case "Ukrainian occupied territories":
-								codes = "";
-								foreach (KeyValuePair<string, string> pair in OccupiedByrus.OccupiedUkrainianTerritories)
-								{
-									codes = $"{codes} \n Region: {pair.Key}. Code: {pair.Value}";
-								}
+								codes = CreateStringFromDictionary(OccupiedByrus.OccupiedUkrainianTerritories);
 								string codesOfOccupiedRegion = $"Codes of occupied regions \n {codes}";
 								Console.WriteLine($"Ukrainian occupied territories: {DateTime.Now} - {codesOfOccupiedRegion}");
 								_client.SendTextMessageAsync(update.Message.Chat.Id, codesOfOccupiedRegion, replyMarkup: BackButtonReply());
 								break;
 							case "Moldavian occupied territories":
-								codes = "";
-								foreach (KeyValuePair<string, string> pair in OccupiedByrus.OccupiedMoldovianTerritories)
-								{
-									codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
-								}
+								codes = CreateStringFromDictionary(OccupiedByrus.OccupiedMoldovianTerritories);
 								codesOfOccupiedRegion = $"Codes of occupied regions \n {codes}";
 								Console.WriteLine($"Moldavian occupied territories: {DateTime.Now} - {codesOfOccupiedRegion}");
 								_client.SendTextMessageAsync(update.Message.Chat.Id, codesOfOccupiedRegion, replyMarkup: BackButtonReply());
 								break;
 							case "Chechen occupied territories":
-								codes = "";
-								foreach (KeyValuePair<string, int> pair in OccupiedByrus.OccupiedChechenTerritories)
-								{
-									codes = $"{codes} \n Region: {pair.Key}. Code: {pair.Value}";
-								}
+								codes = CreateStringFromDictionary(OccupiedByrus.OccupiedChechenTerritories);
 								codesOfOccupiedRegion = $"Codes of occupied regions \n {codes}";
 								Console.WriteLine($"Chechen occupied territories: {DateTime.Now} - {codesOfOccupiedRegion}");
 								_client.SendTextMessageAsync(update.Message.Chat.Id, codesOfOccupiedRegion, replyMarkup: BackButtonReply());
 								break;
 							case "ru military car numbers according to Wiki":
-								codes = "";
-								foreach (KeyValuePair<int, string> pair in MilitaryCodesrus.MilitaryCodesrusAccordingToWiki)
-								{
-									codes = $"{codes} \n Code: {pair.Key}. Name: {pair.Value}";
-								}
+								codes = CreateStringFromDictionary(MilitaryCodesrus.MilitaryCodesrusAccordingToWiki);
 								string militaryCodes = $"Military codes \n {codes}";
 								Console.WriteLine($"Militari according to wiki: {DateTime.Now} - {militaryCodes}");
 								_client.SendTextMessageAsync(update.Message.Chat.Id, militaryCodes, replyMarkup: BackButtonReply());
 								break;
 							case "ru military car numbers according to lazlegend": //responce too long
-								codes = "";
-								foreach (KeyValuePair<string, string> pair in MilitaryCodesrus.MilitaryCodesrusAccordingTolazlegend)
-								{
-									codes = $"{codes} \n Codes: {pair.Key}. Names: {pair.Value}";
-								}
+								codes = CreateStringFromDictionary(MilitaryCodesrus.MilitaryCodesrusAccordingTolazlegend);
 								militaryCodes = $"Military codes \n {codes}";
 								Console.WriteLine($"Militari according to lazlegend: {DateTime.Now} - {militaryCodes}");
-								_client.SendTextMessageAsync(update.Message.Chat.Id, militaryCodes, replyMarkup: BackButtonReply());
+								List<string> result = SplitString(codes);
+								foreach (string code in result)
+								{
+									_client.SendTextMessageAsync(update.Message.Chat.Id, code, replyMarkup: BackButtonReply());
+								}
 								break;
 							case "Baza Gai":
 								_client.SendTextMessageAsync(update.Message.Chat.Id, "Baza Gai:", replyMarkup: BackButtonReply());
@@ -337,6 +326,28 @@ namespace CarNumberRegionsTgBot
 					new KeyboardButton("Back"),
 				}
 			});
+		}
+
+		private static string CreateStringFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dict)
+		{
+			string codes = "";
+			foreach (KeyValuePair<TKey, TValue> pair in dict)
+			{
+				codes = $"{codes} \n Code: {pair.Key}. Region: {pair.Value}";
+			}
+			return codes;
+		}
+
+		private static List<string> SplitString(string input)
+		{
+			List<string> result = new List<string>();
+			int index = input.IndexOf("Code: 32");
+			string firstPart = input.Substring(0, index);
+			string secondPart = input.Substring(index);
+			result.Add(firstPart);
+			result.Add(secondPart);
+			return result;
+
 		}
 	}
 }
