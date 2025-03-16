@@ -1,0 +1,11 @@
+{
+  "filePath": "./History/",
+  "profiles": {
+    "CarNumberRegionsTgBot": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
