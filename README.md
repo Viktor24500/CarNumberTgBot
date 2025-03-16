@@ -1,5 +1,8 @@
 # CarNumberTgBot
 Bot with car number regions
+Ukrainian license plate codes  from 1995 till present, diplomatic codes in Ukraine
+russian military license plate codes
+license plate codes in occupied territories
 tg @CarNumberRegionsTgBot
 
 # start in docker
