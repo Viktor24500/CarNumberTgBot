@@ -68,7 +68,7 @@ namespace CarNumberRegionsTgBot
 						}
 						else
 						{
-							_files.WriteToStorage($"Time: {DateTime.Now} User: {update.Message.Chat.Username}. CarNumber: {text}");
+							_files.WriteToStorage($"Time: {DateTime.Now} UserName: {update.Message.Chat.Username}. UserId: {update.Message.From.Id} CarNumber: {text}");
 							string result = string.Empty;
 							string nameofErrorCode = string.Empty;
 							// Handle the BazaGai query and get the response
@@ -139,7 +139,7 @@ namespace CarNumberRegionsTgBot
 							DateTime time = DateTime.Now;
 							Console.WriteLine($"User info: {update.Message.Chat.Username}");
 							Console.WriteLine($"{time} - User: {text}");
-							_files.WriteToStorage($"Time: {time} User: {update.Message.Chat.Username}. Message: {text}");
+							_files.WriteToStorage($"Time: {time} UserName: {update.Message.Chat.Username}. UserId: {update.Message.From.Id}. Message: {text}");
 
 							Console.Write("Admin enter your text: ");
 							string adminText = Console.ReadLine();
@@ -314,7 +314,6 @@ namespace CarNumberRegionsTgBot
 			result.Add(firstPart);
 			result.Add(secondPart);
 			return result;
-
 		}
 	}
 }

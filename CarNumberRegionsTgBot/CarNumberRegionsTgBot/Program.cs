@@ -10,8 +10,8 @@ namespace CarNumberRegionsTgBot
 			try
 			{
 				var configuration = new ConfigurationBuilder()
-					//.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../../Properties"))
-					.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "Properties"))
+					//.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../../Properties")) //for console
+					.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "Properties")) //for docker
 					.AddJsonFile("launchSettings.json")
 					.Build();
 				TgBot.CreateFilesInstnce(configuration);
