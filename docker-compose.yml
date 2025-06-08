@@ -6,6 +6,8 @@ services:
       context: ./CarNumberRegionsTgBot
       dockerfile: CarNumberRegionsTgBot/Dockerfile
     environment:
-        filePath: ../../../../../History
+        filePath: ./History
     stdin_open: true  # Keeps stdin open to allow input
     tty: true         # Allocates a pseudo-TTY for interactive input/output
+    volumes:
+      - ./History:/app/History
