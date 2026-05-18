@@ -16,6 +16,11 @@ namespace CarNumberRegionsTgBot
 
 				var token = configuration["BOT_TOKEN"];
 
+				if (string.IsNullOrWhiteSpace(token))
+				{
+					throw new Exception("BOT_TOKEN is missing");
+				}
+
 				TgBot.CreateFilesInstnce(configuration);
 				TgBot.getUpdate(token);
 			}
