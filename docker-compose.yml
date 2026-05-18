@@ -7,6 +7,7 @@ services:
       dockerfile: CarNumberRegionsTgBot/Dockerfile
     environment:
         filePath: ./History
+        BOT_TOKEN: 7491430607:AAEontZSaKJ1p_tvH_TulTQVtqHOUZEkXeM
     stdin_open: true  # Keeps stdin open to allow input
     tty: true         # Allocates a pseudo-TTY for interactive input/output
     volumes:
