@@ -1,12 +1,18 @@
 {
-  "filePath": "History",
-  "BOT_TOKEN": "7491430607:AAEontZSaKJ1p_tvH_TulTQVtqHOUZEkXeM",
   "profiles": {
     "CarNumberRegionsTgBot": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "environmentVariables": {
+        "BOT_TOKEN": "7491430607:AAEontZSaKJ1p_tvH_TulTQVtqHOUZEkXeM",
+        "filePath": "History"
+      }
     },
     "Container (Dockerfile)": {
-      "commandName": "Docker"
+      "commandName": "Docker",
+      "environmentVariables": {
+        "BOT_TOKEN": "7491430607:AAEontZSaKJ1p_tvH_TulTQVtqHOUZEkXeM",
+        "filePath": "History"
+      }
     }
   }
 }
